@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"?>
+
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>ManagedONS</id>
+        <version>1.1.0</version>
+        <title>ManagedONS</title>
+        <authors>Darren Fang</authors>
+        <owners>Darren Fang</owners>
+        <licenseUrl>https://github.com/darrenfang/ManagedONS/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/darrenfang/ManagedONS</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>阿里云消息队列（ONS）.NET SDK</description>
+        <copyright>Copyright 2016 Darren Fang</copyright>
+    </metadata>
+</package>
