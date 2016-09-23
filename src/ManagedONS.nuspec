@@ -3,7 +3,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>ManagedONS</id>
-        <version>1.1.5</version>
+        <version>1.2.0</version>
         <title>ManagedONS</title>
         <authors>Darren Fang</authors>
         <owners>Darren Fang</owners>
