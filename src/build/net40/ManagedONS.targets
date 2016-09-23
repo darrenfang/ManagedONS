@@ -3,12 +3,12 @@
   <ItemGroup>
     <AliyunONSFiles Condition="'$(MSBuildThisFileDirectory)' != '' And
                                    HasTrailingSlash('$(MSBuildThisFileDirectory)') And
-                                   $(Platform) == 'x86'"
+                                   $(PlatformTarget) == 'x86'"
                         Include="$(MSBuildThisFileDirectory)**\x86\*.*" />
 
     <AliyunONSFiles Condition="'$(MSBuildThisFileDirectory)' != '' And
                                    HasTrailingSlash('$(MSBuildThisFileDirectory)') And
-                                   $(Platform) != 'x86'"
+                                   $(PlatformTarget) != 'x86'"
                         Include="$(MSBuildThisFileDirectory)**\x64\*.*" />
   </ItemGroup>
 

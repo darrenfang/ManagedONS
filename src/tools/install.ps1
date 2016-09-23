@@ -28,15 +28,15 @@ if($allProjects.MoveNext())
                 $hintPath = $reference.GetMetadataValue("HintPath")
                 
                 # Update HintPath
-                $newHintPath = $hintPath -replace '(.*\\)(x64)(\\.*\.dll)$', '$1$(Platform)$3'
-                $newHintPath = $newHintPath -replace '(.*\\)(x86)(\\.*\.dll)$', '$1$(Platform)$3'
-                $newHintPath = $newHintPath -replace '(.*\\)(AnyCPU)(\\.*\.dll)$', '$1$(Platform)$3'
+                $newHintPath = $hintPath -replace '(.*\\)(x64)(\\.*\.dll)$', '$1$(PlatformTarget)$3'
+                $newHintPath = $newHintPath -replace '(.*\\)(x86)(\\.*\.dll)$', '$1$(PlatformTarget)$3'
+                $newHintPath = $newHintPath -replace '(.*\\)(AnyCPU)(\\.*\.dll)$', '$1$(PlatformTarget)$3'
                 
                 Write-Host "Update HintPath to $newHintPath"
                 $newMetadataValue = $reference.SetMetadataValue("HintPath", $newHintPath);
             }
         }
     }
+    
+    $currentProject.Save()
 }
-
-$currentProject.Save()

@@ -21,6 +21,6 @@ Install-Package ManagedONS
 	Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);
     ```
     
-### 博客地址
+### 相关博文
 
 [在C#中使用阿里云消息队列(ONS/MQ)](http://www.darrenfang.com/2016/09/using-aliyun-message-queue-ons-mq-in-c-sharp/ "在C#中使用阿里云消息队列(ONS/MQ)")
