@@ -1,118 +1,148 @@
+<!--
+ *
+ * Come from System.Data.SQLite.Core.targets
+ *
+-->
+
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <ItemGroup>
-    <AliyunONSFiles Condition="'$(MSBuildThisFileDirectory)' != '' And
-                                   HasTrailingSlash('$(MSBuildThisFileDirectory)') And
-                                   $(PlatformTarget) == 'x86'"
-                        Include="$(MSBuildThisFileDirectory)**\x86\*.*" />
+    <!--
+    ******************************************************************************
+    **                            Determine platform                            **
+    ******************************************************************************
+    -->
 
-    <AliyunONSFiles Condition="'$(MSBuildThisFileDirectory)' != '' And
-                                   HasTrailingSlash('$(MSBuildThisFileDirectory)') And
-                                   $(PlatformTarget) != 'x86'"
-                        Include="$(MSBuildThisFileDirectory)**\x64\*.*" />
-  </ItemGroup>
+    <PropertyGroup Condition=" '$(PlatformTarget)' == 'x86' ">
+        <BuildPlatform>x86</BuildPlatform>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(PlatformTarget)' == 'x64' ">
+        <BuildPlatform>x64</BuildPlatform>
+    </PropertyGroup>
+    <PropertyGroup
+        Condition=" '$(PlatformTarget)' == 'AnyCPU' 
+                    and '$(TargetFrameworkVersion)' == 'v4.0' ">
+        <BuildPlatform>x64</BuildPlatform>
+    </PropertyGroup>
+    <PropertyGroup
+        Condition=" '$(PlatformTarget)' == 'AnyCPU' 
+                    and '$(TargetFrameworkVersion)' != 'v4.0' 
+                    and '$(Prefer32Bit)' == 'false' ">
+        <BuildPlatform>x64</BuildPlatform>
+    </PropertyGroup>
+    <PropertyGroup
+        Condition=" '$(PlatformTarget)' == 'AnyCPU' 
+                    and '$(TargetFrameworkVersion)' != 'v4.0' 
+                    and '$(Prefer32Bit)' != 'false' ">
+        <BuildPlatform>x86</BuildPlatform>
+    </PropertyGroup>
 
-  <!--
-  ******************************************************************************
-  **                   AliyunONS Content Items                   **
-  ******************************************************************************
-  -->
+    <ItemGroup>
+        <AliyunONSFiles Include="$(MSBuildThisFileDirectory)**\$(BuildPlatform)\*.*" />
+    </ItemGroup>
 
-  <ItemGroup Condition="'$(ContentAliyunONSFiles)' != '' And
+    <!--
+    ******************************************************************************
+    **                         AliyunONS Content Items                          **
+    ******************************************************************************
+    -->
+
+    <ItemGroup
+        Condition="'$(ContentAliyunONSFiles)' != '' And
                         '$(ContentAliyunONSFiles)' != 'false' And
                         '@(AliyunONSFiles)' != ''">
-    <Content Include="@(AliyunONSFiles)">
-      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+        <Content Include="@(AliyunONSFiles)">
+            <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <!--
-  ******************************************************************************
-  **                   AliyunONS Build Targets                   **
-  ******************************************************************************
-  -->
+    <!--
+    ******************************************************************************
+    **                         AliyunONS Build Targets                          **
+    ******************************************************************************
+    -->
 
-  <Target Name="CopyAliyunONSFiles"
-          Condition="'$(CopyAliyunONSFiles)' != 'false' And
+    <Target Name="CopyAliyunONSFiles"
+            Condition="'$(CopyAliyunONSFiles)' != 'false' And
                      '$(OutDir)' != '' And
                      HasTrailingSlash('$(OutDir)') And
                      Exists('$(OutDir)')"
-          Inputs="@(AliyunONSFiles)"
-          Outputs="@(AliyunONSFiles -> '$(OutDir)%(Filename)%(Extension)')">
-    <!--
+            Inputs="@(AliyunONSFiles)"
+            Outputs="@(AliyunONSFiles -> '$(OutDir)%(Filename)%(Extension)')">
+        <!--
         NOTE: Copy "ManagedONS.dll" and all related files, for every
               architecture that we support, to the build output directory.
     -->
-    <Copy SourceFiles="@(AliyunONSFiles)"
-          DestinationFiles="@(AliyunONSFiles -> '$(OutDir)%(Filename)%(Extension)')" />
-  </Target>
+        <Copy SourceFiles="@(AliyunONSFiles)"
+              DestinationFiles="@(AliyunONSFiles -> '$(OutDir)%(Filename)%(Extension)')" />
+    </Target>
 
-  <!--
-  ******************************************************************************
-  -->
+    <!--
+    ******************************************************************************
+    -->
 
-  <Target Name="CleanAliyunONSFiles"
-          Condition="'$(CleanAliyunONSFiles)' != 'false' And
+    <Target Name="CleanAliyunONSFiles"
+            Condition="'$(CleanAliyunONSFiles)' != 'false' And
                      '$(OutDir)' != '' And
                      HasTrailingSlash('$(OutDir)') And
                      Exists('$(OutDir)')">
-    <!--
+        <!--
         NOTE: Delete "ManagedONS" and all related files, for every
-              architecture that we support, from the build output directory.
+                architecture that we support, from the build output directory.
+        -->
+        <Delete Files="@(AliyunONSFiles -> '$(OutDir)%(Filename)%(Extension)')" />
+    </Target>
+
+    <!--
+    ******************************************************************************
     -->
-    <Delete Files="@(AliyunONSFiles -> '$(OutDir)%(Filename)%(Extension)')" />
-  </Target>
 
-  <!--
-  ******************************************************************************
-  -->
+    <Target Name="CollectAliyunONSFiles"
+            Condition="'$(CollectAliyunONSFiles)' != 'false'">
+        <ItemGroup>
+            <FilesForPackagingFromProject Include="@(AliyunONSFiles)">
+                <DestinationRelativePath>bin\%(Filename)%(Extension)</DestinationRelativePath>
+            </FilesForPackagingFromProject>
+        </ItemGroup>
+    </Target>
 
-  <Target Name="CollectAliyunONSFiles"
-          Condition="'$(CollectAliyunONSFiles)' != 'false'">
-    <ItemGroup>
-      <FilesForPackagingFromProject Include="@(AliyunONSFiles)">
-        <DestinationRelativePath>bin\%(Filename)%(Extension)</DestinationRelativePath>
-      </FilesForPackagingFromProject>
-    </ItemGroup>
-  </Target>
+    <!--
+    ******************************************************************************
+    **                        AliyunONS Build Properties                        **
+    ******************************************************************************
+    -->
 
-  <!--
-  ******************************************************************************
-  **                 AliyunONS Build Properties                  **
-  ******************************************************************************
-  -->
+    <PropertyGroup>
+        <PostBuildEventDependsOn>
+            $(PostBuildEventDependsOn);
+            CopyAliyunONSFiles;
+        </PostBuildEventDependsOn>
+        <BuildDependsOn>
+            $(BuildDependsOn);
+            CopyAliyunONSFiles;
+        </BuildDependsOn>
+        <CleanDependsOn>
+            $(CleanDependsOn);
+            CleanAliyunONSFiles;
+        </CleanDependsOn>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <PostBuildEventDependsOn>
-      $(PostBuildEventDependsOn);
-      CopyAliyunONSFiles;
-    </PostBuildEventDependsOn>
-    <BuildDependsOn>
-      $(BuildDependsOn);
-      CopyAliyunONSFiles;
-    </BuildDependsOn>
-    <CleanDependsOn>
-      $(CleanDependsOn);
-      CleanAliyunONSFiles;
-    </CleanDependsOn>
-  </PropertyGroup>
+    <!--
+    ******************************************************************************
+    **           AliyunONS Publish Properties for Visual Studio 201x            **
+    ******************************************************************************
+    -->
 
-  <!--
-  ******************************************************************************
-  **     AliyunONS Publish Properties for Visual Studio 201x     **
-  ******************************************************************************
-  -->
-
-  <PropertyGroup Condition="'$(VisualStudioVersion)' == '' Or
+    <PropertyGroup
+        Condition="'$(VisualStudioVersion)' == '' Or
                             '$(VisualStudioVersion)' == '10.0' Or
                             '$(VisualStudioVersion)' == '11.0' Or
                             '$(VisualStudioVersion)' == '12.0' Or
                             '$(VisualStudioVersion)' == '14.0' Or
                             '$(VisualStudioVersion)' == '15.0'">
-    <PipelineCollectFilesPhaseDependsOn>
-      CollectAliyunONSFiles;
-      $(PipelineCollectFilesPhaseDependsOn);
-    </PipelineCollectFilesPhaseDependsOn>
-  </PropertyGroup>
+        <PipelineCollectFilesPhaseDependsOn>
+            CollectAliyunONSFiles;
+            $(PipelineCollectFilesPhaseDependsOn);
+        </PipelineCollectFilesPhaseDependsOn>
+    </PropertyGroup>
 </Project>
